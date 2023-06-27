@@ -27,7 +27,7 @@
 ##### Страница содержит три вкладки.
 
 ###### DASHBOARD
-![Image alt] (https://github.com/AlxndrKatz/SearchEngine/blob/main/readme/dashboard.png)
+![Image alt](https://github.com/AlxndrKatz/SearchEngine/blob/main/readme/dashboard.png)
 
 Данная вкладка отображает текущее состояние процессов.
 
@@ -38,7 +38,7 @@
 
 После запуска индексации ее можно остановить - кнопка активации меняет свое состояние.
 
-![Image alt] (https://github.com/AlxndrKatz/SearchEngine/blob/main/readme/stopind.PNG)
+![Image alt](https://github.com/AlxndrKatz/SearchEngine/blob/main/readme/stopind.PNG)
 
 ###### SEARCH
 ![Image alt](https://github.com/AlxndrKatz/SearchEngine/blob/main/readme/search.png)
