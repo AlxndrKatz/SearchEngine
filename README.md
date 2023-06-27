@@ -27,7 +27,7 @@
 ##### Страница содержит три вкладки.
 
 ###### DASHBOARD
-![Image alt](https://github.com/AlxndrKatz/SearchEngine/blob/main/readme/dashboard.png)
+
 
 Данная вкладка отображает текущее состояние процессов.
 
