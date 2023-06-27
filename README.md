@@ -27,24 +27,28 @@
 #### Страница содержит три вкладки:
 
 #### DASHBOARD
-![Image alt](https://github.com/AlxndrKatz/SearchEngine/blob/main/readme/dashboard.png)
 
 Данная вкладка отображает текущее состояние процессов.
+![Image alt](https://github.com/AlxndrKatz/SearchEngine/blob/main/readme/dashboard.png)
+
+
 
 
 #### MANAGEMENT
-![Image alt](https://github.com/AlxndrKatz/SearchEngine/blob/main/readme/management.png)
 
 Панель управления поисковым движком - доступны функции запуска/остановки индексации и обновления данных по отдельным страницам.
+![Image alt](https://github.com/AlxndrKatz/SearchEngine/blob/main/readme/management.png)
 
-![Image alt](https://github.com/AlxndrKatz/SearchEngine/blob/main/readme/stopind.PNG)
 
 После запуска индексации ее можно остановить - кнопка активации меняет свое состояние.
+![Image alt](https://github.com/AlxndrKatz/SearchEngine/blob/main/readme/stopind.PNG)
 
 
 
 #### SEARCH
-![Image alt](https://github.com/AlxndrKatz/SearchEngine/blob/main/readme/search.png)
 
 В данной вкладке имеется поле для ввода искомых слов. Выше находится выпадающий список сайтов для поиска на конкретных сайтах из числа проиндексированных.
+![Image alt](https://github.com/AlxndrKatz/SearchEngine/blob/main/readme/search.png)
+
+
 
