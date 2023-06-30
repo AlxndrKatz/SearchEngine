@@ -20,7 +20,7 @@ import java.util.List;
 public class IndexParser implements IndexInterface {
     private final PageRepository pageRepository;
     private final LemmaRepository lemmaRepository;
-    private final MorphologyInterface getLemmaInterface;
+    private final MorphologyInterface morphologyInterface;
     private List<StatisticsIndex> statisticsIndexList;
 
     @Override
@@ -40,8 +40,8 @@ public class IndexParser implements IndexInterface {
                 String pageContent = page.getContent();
                 String title = HTMLParser.parseHtml(pageContent, "title");
                 String body = HTMLParser.parseHtml(pageContent, "body");
-                HashMap<String, Integer> titleList = getLemmaInterface.getLemmaList(title);
-                HashMap<String, Integer> bodyList = getLemmaInterface.getLemmaList(body);
+                HashMap<String, Integer> titleList = morphologyInterface.getLemmaList(title);
+                HashMap<String, Integer> bodyList = morphologyInterface.getLemmaList(body);
 
                 for (Lemma lemma : lemmaList) {
                     Integer lemmaId = lemma.getId();

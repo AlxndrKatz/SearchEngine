@@ -22,7 +22,8 @@ public class ApiController {
     private final SiteRepository siteRepository;
     private final SearchService searchService;
 
-    public ApiController(StatisticsService statisticsService, IndexingService indexingService, SiteRepository siteRepository, SearchService searchService) {
+    public ApiController(StatisticsService statisticsService, IndexingService indexingService,
+                         SiteRepository siteRepository, SearchService searchService) {
 
         this.statisticsService = statisticsService;
         this.indexingService = indexingService;
@@ -56,17 +57,20 @@ public class ApiController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Object> search(@RequestParam(name = "query", required = false, defaultValue = "")
-                                         String request, @RequestParam(name = "site", required = false, defaultValue = "") String site,
-                                         @RequestParam(name = "offset", required = false, defaultValue = "0") int offset,
-                                         @RequestParam(name = "limit", required = false, defaultValue = "20") int limit) {
+    public ResponseEntity<Object> search
+            (@RequestParam(name = "query", required = false, defaultValue = "") String request,
+             @RequestParam(name = "site", required = false, defaultValue = "") String site,
+             @RequestParam(name = "offset", required = false, defaultValue = "0") int offset,
+             @RequestParam(name = "limit", required = false, defaultValue = "20") int limit) {
         if (request.isEmpty()) {
-            return new ResponseEntity<>(new InvalidQuery(false, "Задан пустой поисковый запрос"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new InvalidQuery(false, "Задан пустой поисковый запрос"),
+                    HttpStatus.BAD_REQUEST);
         } else {
             List<StatisticsSearch> searchData;
             if (!site.isEmpty()) {
                 if (siteRepository.findByUrl(site) == null) {
-                    return new ResponseEntity<>(new InvalidQuery(false, "Указанная страница не найдена"),
+                    return new ResponseEntity<>(new InvalidQuery
+                            (false, "Указанная страница не найдена"),
                             HttpStatus.BAD_REQUEST);
                 } else {
                     searchData = searchService.siteSearch(request, site, offset, limit);
@@ -82,14 +86,16 @@ public class ApiController {
     public ResponseEntity<Object> indexPage(@RequestParam(name = "url") String url) {
         if (url.isEmpty()) {
             log.info("This page is not defined");
-            return new ResponseEntity<>(new InvalidQuery(false, "Указанная страница не найдена"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new InvalidQuery
+                    (false, "Указанная страница не найдена"), HttpStatus.BAD_REQUEST);
         } else {
             if (indexingService.urlIndexing(url) == true) {
                 log.info("Page - " + url + " - added to the reindexing queue");
                 return new ResponseEntity<>(new Response(true), HttpStatus.OK);
             } else {
                 log.info("Required page from the configuration file");
-                return new ResponseEntity<>(new InvalidQuery(false, "Указанная страница не найдена"),
+                return new ResponseEntity<>(new InvalidQuery
+                        (false, "Указанная страница не найдена"),
                         HttpStatus.BAD_REQUEST);
             }
         }

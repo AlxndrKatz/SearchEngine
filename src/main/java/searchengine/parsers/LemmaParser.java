@@ -17,7 +17,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @RequiredArgsConstructor
 public class LemmaParser implements LemmaInterface {
     private final PageRepository pageRepository;
-    private final MorphologyInterface getLemmaInterface;
+    private final MorphologyInterface morphologyInterface;
     private List<StatisticsLemma> statisticsLemmaList;
 
     @Override
@@ -29,8 +29,8 @@ public class LemmaParser implements LemmaInterface {
             String pageContent = page.getContent();
             String title = HTMLParser.parseHtml(pageContent, "title");
             String body = HTMLParser.parseHtml(pageContent, "body");
-            HashMap<String, Integer> titleList = getLemmaInterface.getLemmaList(title);
-            HashMap<String, Integer> bodyList = getLemmaInterface.getLemmaList(body);
+            HashMap<String, Integer> titleList = morphologyInterface.getLemmaList(title);
+            HashMap<String, Integer> bodyList = morphologyInterface.getLemmaList(body);
             Set<String> allTheWords = new HashSet<>();
             allTheWords.addAll(titleList.keySet());
             allTheWords.addAll(bodyList.keySet());

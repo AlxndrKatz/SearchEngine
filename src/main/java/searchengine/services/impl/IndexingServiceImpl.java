@@ -29,9 +29,9 @@ public class IndexingServiceImpl implements IndexingService {
     private final PageRepository pageRepository;
     private final SiteRepository siteRepository;
     private final LemmaRepository lemmaRepository;
-    private final IndexRepository searchIndexRepository;
-    private final LemmaInterface lemmaParserInterface;
-    private final IndexInterface indexParserInterface;
+    private final IndexRepository indexRepository;
+    private final LemmaInterface lemmaInterface;
+    private final IndexInterface indexInterface;
     private final SitesList sitesList;
 
     @Override
@@ -40,8 +40,8 @@ public class IndexingServiceImpl implements IndexingService {
             log.info("Start reindexing site - " + url);
             executorService = Executors.newFixedThreadPool(cpuCoreCount);
             executorService.submit(new IndexingSite(pageRepository, siteRepository,
-                    lemmaRepository, searchIndexRepository,
-                    lemmaParserInterface, indexParserInterface, url, sitesList));
+                    lemmaRepository, indexRepository,
+                    lemmaInterface, indexInterface, url, sitesList));
             executorService.shutdown();
 
             return true;
@@ -64,8 +64,8 @@ public class IndexingServiceImpl implements IndexingService {
                 sitePage.setName(site.getName());
                 log.info("Parsing site: " + site.getName());
                 executorService.submit(new IndexingSite(pageRepository, siteRepository,
-                        lemmaRepository, searchIndexRepository,
-                        lemmaParserInterface, indexParserInterface, url, sitesList));
+                        lemmaRepository, indexRepository,
+                        lemmaInterface, indexInterface, url, sitesList));
             }
             executorService.shutdown();
         }
@@ -76,7 +76,12 @@ public class IndexingServiceImpl implements IndexingService {
     public boolean stopIndexing() {
         if (isIndexingActive()) {
             log.info("Indexing stopped");
-            executorService.shutdownNow();
+            Iterable<SitePage> siteList = siteRepository.findAll();
+            for (SitePage site : siteList) {
+                if (site.getStatus() == Status.INDEXING) {
+                    site.setStatus(Status.FAILED);
+                }
+            }
             return true;
         } else {
             log.info("Indexing was not stopped because it was not started");

@@ -27,9 +27,9 @@ public class IndexingSite implements Runnable {
     private final SiteRepository siteRepository;
     private final LemmaRepository lemmaRepository;
     private static final int CPU_CORES = Runtime.getRuntime().availableProcessors();
-    private final IndexRepository indexSearchRepository;
-    private final LemmaInterface lemmaParserInterface;
-    private final IndexInterface indexParserInterface;
+    private final IndexRepository indexRepository;
+    private final LemmaInterface lemmaInterface;
+    private final IndexInterface indexInterface;
     private final String url;
     private final SitesList sitesList;
 
@@ -60,7 +60,12 @@ public class IndexingSite implements Runnable {
             indexingWords();
         } catch (InterruptedException e) {
             log.error(url + " - Indexing stopped");
-            siteIndexingError();
+            //siteIndexingError();//////////
+            SitePage sitePage = siteRepository.findByUrl(url);
+            sitePage.setLastError("Indexing stopped");
+            sitePage.setStatus(Status.FAILED);
+            sitePage.setStatusTime(new Date());
+            siteRepository.save(sitePage);
         }
     }
 
@@ -68,8 +73,8 @@ public class IndexingSite implements Runnable {
         if (!Thread.interrupted()) {
             SitePage sitePage = siteRepository.findByUrl(url);
             sitePage.setStatusTime(new Date());
-            lemmaParserInterface.run(sitePage);
-            List<StatisticsLemma> statisticsLemmaDtoList = lemmaParserInterface.getLemmaList();
+            lemmaInterface.run(sitePage);
+            List<StatisticsLemma> statisticsLemmaDtoList = lemmaInterface.getLemmaList();
             List<Lemma> lemmaList = new CopyOnWriteArrayList<>();
             for (StatisticsLemma statisticsLemmaDto : statisticsLemmaDtoList) {
                 lemmaList.add(new Lemma(statisticsLemmaDto.getLemma(), statisticsLemmaDto.getFrequency(), sitePage));
@@ -111,8 +116,8 @@ public class IndexingSite implements Runnable {
     private void indexingWords() throws InterruptedException {
         if (!Thread.interrupted()) {
             SitePage sitePage = siteRepository.findByUrl(url);
-            indexParserInterface.run(sitePage);
-            List<StatisticsIndex> statisticsIndexList = new CopyOnWriteArrayList<>(indexParserInterface.getIndexList());
+            indexInterface.run(sitePage);
+            List<StatisticsIndex> statisticsIndexList = new CopyOnWriteArrayList<>(indexInterface.getIndexList());
             List<ModelIndex> indexList = new CopyOnWriteArrayList<>();
             sitePage.setStatusTime(new Date());
             for (StatisticsIndex statisticsIndex : statisticsIndexList) {
@@ -120,8 +125,8 @@ public class IndexingSite implements Runnable {
                 Lemma lemma = lemmaRepository.getById(statisticsIndex.getLemmaID());
                 indexList.add(new ModelIndex(page, lemma, statisticsIndex.getRank()));
             }
-            indexSearchRepository.flush();
-            indexSearchRepository.saveAll(indexList);
+            indexRepository.flush();
+            indexRepository.saveAll(indexList);
             log.info(url + " - " + getName() + " - Indexing completed");
             sitePage.setStatusTime(new Date());
             sitePage.setStatus(Status.INDEXED);
@@ -132,12 +137,15 @@ public class IndexingSite implements Runnable {
     }
 
     private void saveSiteToDataBase() {
-        SitePage sitePage = new SitePage();
-        sitePage.setUrl(url);
+
+        SitePage sitePage = siteRepository.findByUrl(url);
+        if (sitePage == null) {
+            sitePage = new SitePage();
+            sitePage.setUrl(url);
+        }
         sitePage.setName(getName());
         sitePage.setStatus(Status.INDEXING);
         sitePage.setStatusTime(new Date());
-        siteRepository.flush();
         siteRepository.save(sitePage);
     }
 

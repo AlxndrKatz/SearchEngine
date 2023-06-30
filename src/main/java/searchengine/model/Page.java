@@ -1,16 +1,19 @@
 package searchengine.model;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-@Data
 @Entity
-@Table(name = "page", indexes = {@javax.persistence.Index(name = "path_list", columnList = "path")})
+@Table(name = "page", indexes = {@Index(name = "path_list", columnList = "path")})
+@Setter
+@Getter
 @NoArgsConstructor
 public class Page implements Serializable {
 
@@ -35,5 +38,34 @@ public class Page implements Serializable {
         this.path = path;
         this.code = code;
         this.content = content;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Page that = (Page) o;
+        return id == that.id && code == that.code &&
+                siteId.equals(that.siteId) &&
+                path.equals(that.path) &&
+                content.equals(that.content) &&
+                index.equals(that.index);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, siteId, path, code, content, index);
+    }
+
+    @Override
+    public String toString() {
+        return "PageEntity{" +
+                "id=" + id +
+                ", siteId=" + siteId +
+                ", path='" + path + '\'' +
+                ", code=" + code +
+                ", content='" + content + '\'' +
+                ", index=" + index +
+                '}';
     }
 }

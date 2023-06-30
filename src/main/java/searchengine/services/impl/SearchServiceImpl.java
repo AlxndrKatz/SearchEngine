@@ -26,7 +26,7 @@ public class SearchServiceImpl implements SearchService {
     private final MorphologyInterface getLemmaInterface;
     private final LemmaRepository lemmaRepository;
     private final PageRepository pageRepository;
-    private final IndexRepository indexSearchRepository;
+    private final IndexRepository indexRepository;
     private final SiteRepository siteRepository;
 
     @Override
@@ -94,12 +94,14 @@ public class SearchServiceImpl implements SearchService {
         List<StatisticsSearch> result = new ArrayList<>();
 
         for (Page page : pageList.keySet()) {
+            //
+            String uri = page.getPath();
             String content = page.getContent();
             SitePage pageSite = page.getSiteId();
             String site = pageSite.getUrl();
-            String uri = pageSite.getUrl() + page.getPath();
             String siteName = pageSite.getName();
             Float absRelevance = pageList.get(page);
+            //
 
             StringBuilder clearContent = new StringBuilder();
             String title = HTMLParser.parseHtml(content, "title");
@@ -173,8 +175,8 @@ public class SearchServiceImpl implements SearchService {
         pageRepository.flush();
         if (lemmaList.size() >= textLemmaList.size()) {
             List<Page> foundPageList = pageRepository.findByLemmaList(lemmaList);
-            indexSearchRepository.flush();
-            List<ModelIndex> foundIndexList = indexSearchRepository.findByPagesAndLemmas(lemmaList, foundPageList);
+            indexRepository.flush();
+            List<ModelIndex> foundIndexList = indexRepository.findByPagesAndLemmas(lemmaList, foundPageList);
             Hashtable<Page, Float> sortedPageByAbsRelevance = getPageAbsRelevance(foundPageList, foundIndexList);
             List<StatisticsSearch> dataList = getSearchData(sortedPageByAbsRelevance, textLemmaList);
 

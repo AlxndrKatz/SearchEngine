@@ -1,15 +1,18 @@
 package searchengine.model;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-@Data
 @Entity
+@Getter
+@Setter
 @Table(name = "lemma", indexes = {@javax.persistence.Index(name = "lemma_list", columnList = "lemma")})
 @NoArgsConstructor
 public class Lemma implements Serializable {
@@ -29,5 +32,32 @@ public class Lemma implements Serializable {
         this.lemma = lemma;
         this.frequency = frequency;
         this.sitePageId = sitePageId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Lemma that = (Lemma) o;
+        return id == that.id && frequency == that.frequency &&
+                sitePageId.equals(that.sitePageId) &&
+                lemma.equals(that.lemma) &&
+                index.equals(that.index);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, sitePageId, lemma, frequency, index);
+    }
+
+    @Override
+    public String toString() {
+        return "Lemma{" +
+                "id=" + id +
+                ", sitePageId=" + sitePageId +
+                ", lemma='" + lemma + '\'' +
+                ", frequency=" + frequency +
+                ", index=" + index +
+                '}';
     }
 }

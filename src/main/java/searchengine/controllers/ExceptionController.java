@@ -13,5 +13,4 @@ public class ExceptionController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(new ExceptionMessage("Нет данных" + exception.getMessage()));
     }
-
 }
