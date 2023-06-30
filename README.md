@@ -43,6 +43,8 @@
 После запуска индексации ее можно остановить - кнопка активации меняет свое состояние.
 ![Image alt](https://github.com/AlxndrKatz/SearchEngine/blob/main/readme/stopind.PNG)
 
+После остановки индексации данные на вкладке Dashboard примкт следующий вид:
+![Image alt](https://github.com/AlxndrKatz/SearchEngine/blob/main/readme/indexStopped.PNG)
 
 
 #### SEARCH
